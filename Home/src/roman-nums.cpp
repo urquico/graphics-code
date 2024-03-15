@@ -784,6 +784,9 @@ int main() {
 	// rectangle at the bottom of the screen
 	setcolor(WHITE);
 	rectangle(4, y - 100, x - 5, y - 5);
+	outtextxy(238, 395, "Roman Numeral Numbers");
+	outtextxy(290, 420, "Activity #3");
+	outtextxy(230, 445, "Kurt Urquico & Eulla Hilotina");
  
 	getch();
     closegraph();
