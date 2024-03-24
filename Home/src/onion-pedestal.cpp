@@ -6,16 +6,11 @@
 #include <math.h>
 #include <iostream>
 
+bool SLANTED = true;
+bool NOT_SLANTED = false;
 
-// •	FLOODFILL
-// •	SETLINESTYLE
-// •	SETTEXTSTYLE
-// •	ELLIPSE
-// •	SETFILLSYTYLE
-// •	BAR
-// •	PUTPIXEL
-// •	DELAY
-// •	RANDOM
+bool MIRRORED = true;
+bool NOT_MIRRORED = false;
 
 void flame(int x, int y, int size) {
     // add circles to the flame
@@ -110,11 +105,11 @@ void pedestal(int x, int y, int pedHeight, int pedWidth) {
 
     // Draw the text on the black poster
     int textY = y - pedHeight + 50 + bottomOffset;
-    outtextxy(x / 2 - pedWidth + 30, textY, "Kurt");
-    outtextxy(x / 2 - pedWidth + 30, textY += 10, "Jacob");
-    outtextxy(x / 2 - pedWidth + 23, textY += 10, "Urquico");
-    outtextxy(x / 2 - pedWidth + 30, textY += 10, "BSCS");
-    outtextxy(x / 2 - pedWidth + 30, textY += 10, "4-1");
+    outtextxy(x / 2 - pedWidth + 30, textY, "~~~");
+    outtextxy(x / 2 - pedWidth + 30, textY += 10, "~~");
+    outtextxy(x / 2 - pedWidth + 23, textY += 10, "~~~");
+    outtextxy(x / 2 - pedWidth + 30, textY += 10, "~");
+    outtextxy(x / 2 - pedWidth + 30, textY += 10, "~~~");
 
     // Draw the bottom of the black pedestal
     int bottomLeftX = x / 2 - pedWidth;
@@ -137,12 +132,10 @@ void pedestal(int x, int y, int pedHeight, int pedWidth) {
     // Draw the onion
     pillar(x, y + bottomOffset, pedHeight, pedWidth);
 
-    while (true) {
-        fireWorks(rand() % x, rand() % y);
-    }
+    // while (true) {
+    //     fireWorks(rand() % x, rand() % y);
+    // }
 }
-
-
 
 void cement(int x, int y, int pedHeight, int pedWidth) {
     // Define the points of the bottom of the black pedestal
@@ -163,6 +156,214 @@ void cement(int x, int y, int pedHeight, int pedWidth) {
     fillpoly(4, points);
 }
 
+void midFrontFacade(int x, int y, int pedHeight, int pedWidth) {
+    // Straight facade in the middle of `midFacade` 
+    int topX = x / 2;
+    int topY = y - pedHeight - 170;
+    int leftX = x / 2 - 100;
+    int rightX = x / 2 + 100;
+    int bottomY = y - 10;
+
+    int leftBottomX = leftX;
+    int leftBottomY = bottomY - 20;
+
+    int topLeftX = topX - 100;
+    int topLeftY = topY - 70;
+
+    int topRightX = topX + 100;
+    int topRightY = topY - 70;
+
+    int rightBottomX = rightX;
+    int rightBottomY = bottomY - 20;
+
+    int points[] = {leftBottomX, leftBottomY, topLeftX, topLeftY, topRightX, topRightY, rightBottomX, rightBottomY};
+
+    // Set the fill style and color for the main facade
+    setfillstyle(SOLID_FILL, COLOR(212, 211, 209));
+    setcolor(COLOR(151, 150, 146));
+
+    // Draw the main facade
+    fillpoly(4, points);
+
+    // Rectangle on top of the main facade longer than the main facade
+    int rectLeft = x / 2 - 105;
+    int rectTop = y - pedHeight - 170 - 90;
+    int rectRight = x / 2 + 105;
+    int rectBottom = y - pedHeight - 170 - 80;
+
+    // Draw bars on the rectangle
+    for (int i = 0; i < 5; ++i) {
+        setfillstyle(SOLID_FILL, i % 2 == 0 ? COLOR(91, 83, 80) : COLOR(212, 211, 209));
+        setcolor(i % 2 == 0 ? COLOR(91, 83, 80) : COLOR(151, 150, 146));
+        bar(rectLeft + i, rectBottom + i * 3, rectRight - i, rectBottom + i * 3 + 3);
+    }
+}
+
+void midBackFacade(int x, int y, int pedHeight, int pedWidth) {
+    int topX = x / 2;
+    int topY = y - pedHeight - 120;
+    int leftX = x / 2 - 100;
+    int rightX = x / 2 + 100;
+    int bottomY = y - 10;
+
+    int leftBottomX = leftX - 70;
+    int leftBottomY = bottomY - 20;
+
+    int topLeftX = topX - 170;
+    int topLeftY = topY - 70;
+
+    int topXCoord = topX;
+    int topYCoord = topY - 100;
+
+    int topRightX = topX + 170;
+    int topRightY = topY - 70;
+
+    int rightBottomX = rightX + 70;
+    int rightBottomY = bottomY - 20;
+
+    int leftBottomXCoord = leftX;
+    int leftBottomYCoord = bottomY;
+
+    int points[] = {leftBottomX, leftBottomY, topLeftX, topLeftY, topXCoord, topYCoord, topRightX, topRightY, rightBottomX, rightBottomY, leftBottomXCoord, leftBottomYCoord};
+
+    // Set the fill style and color for the main facade
+    setfillstyle(SOLID_FILL, COLOR(208, 203, 199));
+    setcolor(COLOR(167, 166, 165));
+
+    // Draw the main facade
+    fillpoly(5, points);
+
+    int border[] = {5, 7, 8, 11};
+    int colors[] = {COLOR(91, 83, 80),  COLOR(205, 204, 202), COLOR(91, 83, 80), COLOR(205, 204, 202)};
+    int numPolygons = sizeof(border) / sizeof(border[0]);
+
+    for (int i = 0; i < numPolygons; i++) {
+        int points[] = {leftBottomX + border[i], leftBottomY - border[i], topLeftX + border[i], topLeftY + border[i], topXCoord, topYCoord + border[i], topRightX - border[i], topRightY + border[i], rightBottomX - border[i], rightBottomY - border[i], leftBottomXCoord + border[i], leftBottomYCoord - border[i]};
+
+        setfillstyle(SOLID_FILL, colors[i]);
+        setcolor(colors[i]);
+
+        fillpoly(5, points);
+    }
+}
+
+void ballisters(int x, int y, bool isSlanted){
+    int bWidth = 3;
+
+    if(isSlanted){
+        int points[] = {x, y, x + 10, y - 10, x + 10, y - 20, x, y - 10, x, y};
+        setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
+        setcolor(COLOR(56, 53, 42));
+        fillpoly(5, points);
+
+        int points2[] = {x, y, x - 10, y - 10, x - 10, y - 20, x, y - 10, x, y};
+        setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
+        setcolor(COLOR(56, 53, 42));
+        fillpoly(5, points2);
+
+        return;
+    }
+
+    setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
+    setcolor(COLOR(56, 53, 42));
+    bar(x - bWidth, y, x + bWidth, y + 7);
+
+    setfillstyle(SOLID_FILL, COLOR(177, 172, 172));
+    setcolor(COLOR(177, 172, 172));
+    bar(x - bWidth + 1, y + 7, x + bWidth - 1, y + 26);
+
+    setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
+    setcolor(COLOR(56, 53, 42));
+    bar(x - bWidth, y + 26, x + bWidth, y + 33);
+}
+
+void terrace( int x, int y, int pedHeight, int pedWidth){
+    int bottomLeftX = x / 2 - pedWidth - 80;
+    int bottomRightX = x / 2 + pedWidth + 80;
+    int bottomY = y - pedHeight + 40;
+
+    int ballisterX = x / 2;
+
+    // top terrace
+    for(int i = 0; i < 11; i++){
+        ballisters(ballisterX + 10 * i, bottomY - 33, NOT_SLANTED);
+        ballisters(ballisterX - 10 * i, bottomY - 33, NOT_SLANTED);
+    }
+
+    // block bar at the top of the ballisters
+    setfillstyle(SOLID_FILL, COLOR(100, 90, 88));
+    setcolor(COLOR(100, 90, 88));
+    bar(bottomLeftX, bottomY - 33, bottomRightX, bottomY - 30);
+
+    // bar at the end left and right of the ballisters
+    setfillstyle(SOLID_FILL, COLOR(233, 230, 225));
+    setcolor(COLOR(233, 230, 225));
+
+    bar(bottomLeftX + 5, bottomY - 30, bottomLeftX + 13, bottomY + 5);
+    bar(bottomRightX - 5, bottomY - 30, bottomRightX - 13, bottomY + 5);
+
+    // bottom terrace
+    setfillstyle(SOLID_FILL, COLOR(228, 229, 223));
+    setcolor(COLOR(228, 229, 223));
+
+    bar(bottomLeftX, bottomY, bottomRightX, bottomY + 5);
+
+    setfillstyle(SOLID_FILL, COLOR(91, 83, 80));
+    setcolor(COLOR(91, 83, 80));
+
+    bar(bottomLeftX + 5, bottomY + 5, bottomRightX - 5, bottomY + 7);
+
+    setfillstyle(SOLID_FILL, COLOR(228, 229, 223));
+    setcolor(COLOR(228, 229, 223));
+
+    bar(bottomLeftX + 5, bottomY + 7, bottomRightX - 5, bottomY + 27);
+
+    // bar inside the previous bar
+    setfillstyle(SOLID_FILL, COLOR(212, 205, 202));
+    setcolor(COLOR(212, 205, 202));
+
+    bar(bottomLeftX + 8, bottomY + 10, bottomRightX - 8, bottomY + 24);
+
+    setfillstyle(SOLID_FILL, COLOR(84, 74, 34));
+    setcolor(COLOR(84, 74, 34));
+
+    bar(bottomLeftX + 7, bottomY + 27, bottomRightX - 7, bottomY + 30);
+}
+
+void terracePillar(int x, int y, bool isMirrored){
+    // shadow
+    setfillstyle(SOLID_FILL, BLACK);
+    setcolor(BLACK);
+
+    bar(x - 60, y - 120, x + 60, y - 30);
+
+    // foot pillar
+    setfillstyle(SOLID_FILL, WHITE);
+    setcolor(WHITE);
+    
+    if(isMirrored) bar(x + 6, y - 33, x - 35, y - 30);
+    else bar(x - 6, y - 33, x + 35, y - 30);
+
+    // pillar
+    setfillstyle(SOLID_FILL, COLOR(209, 206, 199));
+    setcolor(BLACK);
+
+    if(isMirrored) bar(x, y - 120, x - 30, y - 30);
+    else bar(x, y - 120, x + 30, y - 30);
+
+    // details
+    setfillstyle(SOLID_FILL, WHITE);
+    setcolor(WHITE);
+
+    if(isMirrored) bar(x - 4, y - 117, x - 26, y - 60);
+    else bar(x + 4, y - 117, x + 26, y - 60);
+
+    if(isMirrored) bar(x + 6, y - 55, x - 34, y - 50);
+    else bar(x - 6, y - 55, x + 34, y - 50);
+
+    if(isMirrored) bar(x - 4, y - 47, x - 26, y - 33);
+    else bar(x + 4, y - 47, x + 26, y - 33);
+}
 
 int main(){
     int gm, x, y, gd = DETECT, i;
@@ -177,9 +378,18 @@ int main(){
     y = getmaxy();
     cleardevice();
 
-    int pedHeight = 200;
-    int pedWidth = 50;
+    int pedHeight = 190;
+    int pedWidth = 40;
     
+    // Main Facade
+    midBackFacade(x, y, pedHeight, pedWidth);
+    midFrontFacade(x, y, pedHeight, pedWidth);
+
+    // Terrace
+    terrace(x, y, pedHeight, pedWidth);
+    terracePillar(x / 2 - 100, y, NOT_MIRRORED);
+    terracePillar(x / 2 + 100, y, MIRRORED);
+
     cement(x, y, pedHeight, pedWidth);
     pedestal(x, y, pedHeight, pedWidth);
  
