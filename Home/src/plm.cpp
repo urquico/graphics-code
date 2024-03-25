@@ -12,6 +12,8 @@ bool NOT_SLANTED = false;
 bool MIRRORED = true;
 bool NOT_MIRRORED = false;
 
+int warp = 15;
+
 void flame(int x, int y, int size) {
     // add circles to the flame
     setfillstyle(XHATCH_FILL, COLOR(178, 148, 126));
@@ -156,6 +158,36 @@ void cement(int x, int y, int pedHeight, int pedWidth) {
     fillpoly(4, points);
 }
 
+void ballisters(int x, int y, bool isSlanted){
+    int bWidth = 3;
+
+    if(isSlanted){
+        int points[] = {x, y, x + 10, y - 10, x + 10, y - 20, x, y - 10, x, y};
+        setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
+        setcolor(COLOR(56, 53, 42));
+        fillpoly(5, points);
+
+        int points2[] = {x, y, x - 10, y - 10, x - 10, y - 20, x, y - 10, x, y};
+        setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
+        setcolor(COLOR(56, 53, 42));
+        fillpoly(5, points2);
+
+        return;
+    }
+
+    setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
+    setcolor(COLOR(56, 53, 42));
+    bar(x - bWidth, y, x + bWidth, y + 7);
+
+    setfillstyle(SOLID_FILL, COLOR(177, 172, 172));
+    setcolor(COLOR(177, 172, 172));
+    bar(x - bWidth + 1, y + 7, x + bWidth - 1, y + 26);
+
+    setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
+    setcolor(COLOR(56, 53, 42));
+    bar(x - bWidth, y + 26, x + bWidth, y + 33);
+}
+
 void midFrontFacade(int x, int y, int pedHeight, int pedWidth) {
     // Straight facade in the middle of `midFacade` 
     int topX = x / 2;
@@ -197,6 +229,79 @@ void midFrontFacade(int x, int y, int pedHeight, int pedWidth) {
         setcolor(i % 2 == 0 ? COLOR(91, 83, 80) : COLOR(151, 150, 146));
         bar(rectLeft + i, rectBottom + i * 3, rectRight - i, rectBottom + i * 3 + 3);
     }
+
+    int windowPoint[] = {
+        x / 2 - 70, y / 2 + 100, 
+        x / 2 - 70, y / 2 - 100,
+        x / 2 + 70, y / 2 - 100,
+        x / 2 + 70, y / 2 + 100
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(244, 246, 239));
+    setcolor(COLOR(244, 246, 239));
+
+    fillpoly(4, windowPoint);
+
+    int border[] = {5, 7, 8, 11};
+    int colors[] = {COLOR(247, 247, 242),  COLOR(84, 80, 69), COLOR(210, 211, 207), COLOR(239, 241, 236)};
+    int numPolygons = sizeof(border) / sizeof(border[0]);
+
+    for (int i = 0; i < numPolygons; i++) {
+        int windowTop[] = {
+            x / 2 - 80 + border[i], y / 2 - 60 - border[i], 
+            x / 2 - 80 + border[i], y / 2 - 100 + border[i],
+            x / 2 + 80 - border[i], y / 2 - 100 + border[i],
+            x / 2 + 80 - border[i], y / 2 - 60 - border[i]
+        };
+
+        setfillstyle(SOLID_FILL, colors[i]);
+        setcolor(colors[i]);
+
+        fillpoly(4, windowTop);
+    }
+
+    // white bar at the edge of the windoTop
+    int windowTopBarLeft[] = {
+        x / 2 - 10 - 80, y / 2 - 70, 
+        x / 2 - 10 - 80, y / 2 - 90,
+        x / 2 + 10 - 80, y / 2 - 90,
+        x / 2 + 10 - 80, y / 2 - 70
+    };
+
+    int windowTopBarRight[] = {
+        x / 2 - 10 + 80, y / 2 - 70, 
+        x / 2 - 10 + 80, y / 2 - 90,
+        x / 2 + 10 + 80, y / 2 - 90,
+        x / 2 + 10 + 80, y / 2 - 70
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(212, 211, 209));
+    setcolor(COLOR(212, 211, 209));
+
+    fillpoly(4, windowTopBarLeft);
+    fillpoly(4, windowTopBarRight);
+
+    // Draw the window (3 bars vertically) centered and spaced evenly
+    int windowLeft = x / 2 - 15;
+    int windowRight = x / 2 + 15;
+    int windowTop = y / 2 - 65;
+    int windowBottom = y / 2 + 100;
+    int windowSpace = 45;
+
+    int windowPointsMid[] = {windowLeft, windowTop, windowLeft, windowBottom, windowRight, windowBottom, windowRight, windowTop};
+
+    int windowPointsLeft[] = {windowLeft - windowSpace, windowTop, windowLeft - windowSpace, windowBottom, windowRight - windowSpace, windowBottom, windowRight - windowSpace, windowTop};
+
+    int windowPointsRight[] = {windowLeft + windowSpace, windowTop, windowLeft + windowSpace, windowBottom, windowRight + windowSpace, windowBottom, windowRight + windowSpace, windowTop};
+
+    setfillstyle(HATCH_FILL, COLOR(56, 50, 60));
+    setcolor(COLOR(56, 50, 60));
+
+    fillpoly(4, windowPointsMid);
+    fillpoly(4, windowPointsLeft);
+    fillpoly(4, windowPointsRight);
+
+
 }
 
 void midBackFacade(int x, int y, int pedHeight, int pedWidth) {
@@ -245,36 +350,62 @@ void midBackFacade(int x, int y, int pedHeight, int pedWidth) {
 
         fillpoly(5, points);
     }
+
+    // windows
+    int windowTop = y / 2 - 70;
+    int windowBottom = y / 2;
+    int windowLeft = x / 10+ 120;
+    int windowRight = x / 10 + 150;
+
+    for(int k = 0; k < 2; k++){
+        int offsetK = k * 110;
+
+        for(int i = 0; i < 2; i++){
+            int offsetY = i * 2;
+            int windowPoints[] = {
+                windowLeft + 243 * i, windowBottom + offsetK, 
+                windowLeft + 243 * i, windowTop + offsetK,
+                windowRight + 243 * i, windowTop + offsetK, 
+                windowRight + 243 * i, windowBottom + offsetK
+            };
+
+            setfillstyle(HATCH_FILL, COLOR(52, 52, 52));
+            setcolor(COLOR(52, 52, 52));
+
+            fillpoly(4, windowPoints);
+
+            int ballisterStartingX = windowLeft + 3;
+            for(int j = 0; j <= 3; j++){
+                ballisters(ballisterStartingX + 8 * j + (i * 243), windowBottom - 30 + offsetK, NOT_SLANTED);
+            }
+        } 
+
+        // white long bar at the top edge of the ballisters
+        setfillstyle(SOLID_FILL, WHITE);
+        setcolor(WHITE); 
+
+        for (int i = 0; i < 2; i++) {
+            bar(
+                windowLeft + 243 * i, windowTop + 40 - 2 / 2 + offsetK, 
+                windowRight + 243 * i, windowTop + 40 + 2 / 2 + offsetK
+            );
+        }
+    }
 }
 
-void ballisters(int x, int y, bool isSlanted){
-    int bWidth = 3;
+void slantedTerrace(int x, int y){
+    // left, top, right, bottom
+    int slantedTerracePoints[] = {
+        x / 2 - 100, y - 120, 
+        x / 2 - 100, y - 90, 
+        x / 2 + 100, y - 90, 
+        x / 2 + 100, y - 120
+    };
 
-    if(isSlanted){
-        int points[] = {x, y, x + 10, y - 10, x + 10, y - 20, x, y - 10, x, y};
-        setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
-        setcolor(COLOR(56, 53, 42));
-        fillpoly(5, points);
+    setfillstyle(SOLID_FILL, COLOR(212, 211, 209));
+    setcolor(COLOR(151, 150, 146));
 
-        int points2[] = {x, y, x - 10, y - 10, x - 10, y - 20, x, y - 10, x, y};
-        setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
-        setcolor(COLOR(56, 53, 42));
-        fillpoly(5, points2);
-
-        return;
-    }
-
-    setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
-    setcolor(COLOR(56, 53, 42));
-    bar(x - bWidth, y, x + bWidth, y + 7);
-
-    setfillstyle(SOLID_FILL, COLOR(177, 172, 172));
-    setcolor(COLOR(177, 172, 172));
-    bar(x - bWidth + 1, y + 7, x + bWidth - 1, y + 26);
-
-    setfillstyle(SOLID_FILL, COLOR(56, 53, 42));
-    setcolor(COLOR(56, 53, 42));
-    bar(x - bWidth, y + 26, x + bWidth, y + 33);
+    fillpoly(4, slantedTerracePoints);
 }
 
 void terrace( int x, int y, int pedHeight, int pedWidth){
@@ -332,8 +463,8 @@ void terrace( int x, int y, int pedHeight, int pedWidth){
 
 void terracePillar(int x, int y, bool isMirrored){
     // Shadow
-    setfillstyle(SOLID_FILL, BLACK);
-    setcolor(BLACK);
+    setfillstyle(HATCH_FILL, COLOR(31, 21, 12));
+    setcolor(COLOR(31, 21, 12));
     bar(x - 60, y - 120, x + 60, y - 30);
 
     // foot pillar
@@ -370,7 +501,6 @@ void leftFacade(int x, int y){
     int top = 110;
     int right = x / 3 - 40;
     int bottom = y - 30;
-    int warp = 15;
 
     int points[] = {
         left, bottom + warp, 
@@ -403,6 +533,67 @@ void leftFacade(int x, int y){
         fillpoly(4, points);
     }
 
+    // windows
+    int windowTop = y / 2 - 70;
+    int windowBottom = y / 2;
+    int windowLeft = x / 10 - 45;
+    int windowRight = x / 10 - 15;
+
+    for(int k = 0; k < 2; k++){
+        int offsetK = k * 90;
+
+        for(int i = 0; i < 4; i++){
+            int offsetY = i * 2;
+            int windowPoints[] = {
+                windowLeft + 35 * i, windowBottom + offsetK, 
+                windowLeft + 35 * i, windowTop + offsetK,
+                windowRight + 35 * i, windowTop + offsetK, 
+                windowRight + 35 * i, windowBottom + offsetK
+            };
+
+            setfillstyle(HATCH_FILL, COLOR(52, 52, 52));
+            setcolor(COLOR(52, 52, 52));
+
+            fillpoly(4, windowPoints);
+
+            int ballisterStartingX = windowLeft + 3;
+            for(int j = 0; j <= 3; j++){
+                ballisters(ballisterStartingX + 8 * j + (i * 35), windowBottom - 30 + offsetK, NOT_SLANTED);
+            }
+
+            
+        } 
+
+        // white long bar at the top edge of the ballisters
+        setfillstyle(SOLID_FILL, WHITE);
+        setcolor(WHITE); 
+
+        for (int i = 0; i < 4; i++) {
+            bar(
+                windowLeft + 35 * i, windowTop + 40 - 2 / 2 + offsetK, 
+                windowRight + 35 * i, windowTop + 40 + 2 / 2 + offsetK
+            );
+        }
+    }
+
+    for(int k = 2; k < 3; k++){
+        int offsetK = k * 90;
+
+        for(int i = 0; i < 4; i++){
+            int offsetY = i * 2;
+            int windowPoints[] = {
+                windowLeft + 35 * i, windowBottom + offsetK + 30, 
+                windowLeft + 35 * i, windowTop + offsetK,
+                windowRight + 35 * i, windowTop + offsetK, 
+                windowRight + 35 * i, windowBottom + offsetK + 30
+            };
+
+            setfillstyle(HATCH_FILL, COLOR(52, 52, 52));
+            setcolor(COLOR(52, 52, 52));
+
+            fillpoly(4, windowPoints);
+        } 
+    }
 
     int pointsBB[] = {
         left, bottom, 
@@ -454,6 +645,69 @@ void rightFacade(int x, int y){
 
         fillpoly(4, points);
     }
+
+    // windows (flipped coordinates)
+    int windowTop = y / 2 - 70;
+    int windowBottom = y / 2;
+    int windowLeft = x / 10 - 45 + 467;
+    int windowRight = x / 10 - 15 + 467;
+
+    for(int k = 0; k < 2; k++){
+        int offsetK = k * 90;
+
+        for(int i = 0; i < 4; i++){
+            int offsetY = i * 2;
+            int windowPoints[] = {
+                windowLeft + 35 * i, windowBottom + offsetK, 
+                windowLeft + 35 * i, windowTop + offsetK,
+                windowRight + 35 * i, windowTop + offsetK, 
+                windowRight + 35 * i, windowBottom + offsetK
+            };
+
+            setfillstyle(HATCH_FILL, COLOR(52, 52, 52));
+            setcolor(COLOR(52, 52, 52));
+
+            fillpoly(4, windowPoints);
+
+            int ballisterStartingX = windowLeft + 3;
+            for(int j = 0; j <= 3; j++){
+                ballisters(ballisterStartingX + 8 * j + (i * 35), windowBottom - 30 + offsetK, NOT_SLANTED);
+            }
+
+            
+        } 
+
+        // white long bar at the top edge of the ballisters
+        setfillstyle(SOLID_FILL, WHITE);
+        setcolor(WHITE); 
+
+        for (int i = 0; i < 4; i++) {
+            bar(
+                windowLeft + 35 * i, windowTop + 40 - 2 / 2 + offsetK, 
+                windowRight + 35 * i, windowTop + 40 + 2 / 2 + offsetK
+            );
+        }
+    }
+
+    for(int k = 2; k < 3; k++){
+        int offsetK = k * 90;
+
+        for(int i = 0; i < 4; i++){
+            int offsetY = i * 2;
+            int windowPoints[] = {
+                windowLeft + 35 * i, windowBottom + offsetK + 30, 
+                windowLeft + 35 * i, windowTop + offsetK,
+                windowRight + 35 * i, windowTop + offsetK, 
+                windowRight + 35 * i, windowBottom + offsetK + 30
+            };
+
+            setfillstyle(HATCH_FILL, COLOR(52, 52, 52));
+            setcolor(COLOR(52, 52, 52));
+
+            fillpoly(4, windowPoints);
+        } 
+    }
+
 
     // border at the bottom of pointsB
     int pointsBB[] = {left - 5, bottom, left - 5, bottom - warp - 15, right, bottom, right, bottom + warp + 15};
@@ -519,6 +773,7 @@ int main(){
 
     // Terrace
     terrace(x, y, pedHeight, pedWidth);
+    slantedTerrace(x, y);
     terracePillar(x / 2 - 100, y, NOT_MIRRORED);
     terracePillar(x / 2 + 100, y, MIRRORED);
 
@@ -532,7 +787,7 @@ int main(){
     pedestal(x, y, pedHeight, pedWidth);
  
     getch();
-    closegraph();
+    // closegraph();
 
     return 0;
 }
