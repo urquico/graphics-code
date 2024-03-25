@@ -132,9 +132,9 @@ void pedestal(int x, int y, int pedHeight, int pedWidth) {
     // Draw the onion
     pillar(x, y + bottomOffset, pedHeight, pedWidth);
 
-    // while (true) {
-    //     fireWorks(rand() % x, rand() % y);
-    // }
+    while (true) {
+        fireWorks(rand() % x, rand() % y);
+    }
 }
 
 void cement(int x, int y, int pedHeight, int pedWidth) {
@@ -331,10 +331,9 @@ void terrace( int x, int y, int pedHeight, int pedWidth){
 }
 
 void terracePillar(int x, int y, bool isMirrored){
-    // shadow
+    // Shadow
     setfillstyle(SOLID_FILL, BLACK);
     setcolor(BLACK);
-
     bar(x - 60, y - 120, x + 60, y - 30);
 
     // foot pillar
@@ -365,6 +364,130 @@ void terracePillar(int x, int y, bool isMirrored){
     else bar(x + 4, y - 47, x + 26, y - 33);
 }
 
+void leftFacade(int x, int y){
+    // 4 point polygon for the left facade
+    int left = 0;
+    int top = 110;
+    int right = x / 3 - 40;
+    int bottom = y - 30;
+    int warp = 15;
+
+    int points[] = {
+        left, bottom + warp, 
+        left, top - warp, 
+        right, top, 
+        right, bottom
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(212, 211, 209));
+    setcolor(COLOR(151, 150, 146));
+
+    fillpoly(4, points);
+
+    // add facade border
+    int border[] = {5, 7, 8, 11};
+    int colors[] = {COLOR(91, 83, 80),  COLOR(205, 204, 202), COLOR(91, 83, 80), COLOR(205, 204, 202)};
+    int numPolygons = sizeof(border) / sizeof(border[0]);
+
+    for (int i = 0; i < numPolygons; i++) {
+        int points[] = {
+            left + border[i], bottom + warp - border[i], 
+            left + border[i], top - warp + border[i], 
+            right - border[i], top + border[i], 
+            right - border[i], bottom - border[i]
+        };
+
+        setfillstyle(SOLID_FILL, colors[i]);
+        setcolor(colors[i]);
+
+        fillpoly(4, points);
+    }
+
+
+    int pointsBB[] = {
+        left, bottom, 
+        left, bottom + warp + 15, 
+        right + 5, bottom, 
+        right + 5, bottom - warp - 15
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(233, 232, 229));
+    setcolor(COLOR(91, 83, 80));
+
+    fillpoly(4, pointsBB);
+}
+
+void rightFacade(int x, int y){
+    // 4 point polygon for the right facade (flipped)
+    int left = x - (x / 3 - 40);
+    int top = 110;
+    int right = x;
+    int bottom = y - 30;
+    int warp = 15;
+
+    int points[] = {
+        left, bottom, 
+        left, top, 
+        right, top - warp, 
+        right, bottom + warp
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(212, 211, 209));
+    setcolor(COLOR(151, 150, 146));
+
+    fillpoly(4, points);
+
+    // add facade border
+    int border[] = {5, 7, 8, 11};
+    int colors[] = {COLOR(91, 83, 80),  COLOR(205, 204, 202), COLOR(91, 83, 80), COLOR(205, 204, 202)};
+    int numPolygons = sizeof(border) / sizeof(border[0]);
+
+    for (int i = 0; i < numPolygons; i++) {
+        int points[] = {
+            left + border[i], bottom - border[i], 
+            left + border[i], top + border[i], 
+            right - border[i], top - warp + border[i], 
+            right - border[i], bottom + warp + border[i]};
+
+        setfillstyle(SOLID_FILL, colors[i]);
+        setcolor(colors[i]);
+
+        fillpoly(4, points);
+    }
+
+    // border at the bottom of pointsB
+    int pointsBB[] = {left - 5, bottom, left - 5, bottom - warp - 15, right, bottom, right, bottom + warp + 15};
+
+    setfillstyle(SOLID_FILL, COLOR(233, 232, 229));
+    setcolor(COLOR(91, 83, 80));
+
+    fillpoly(4, pointsBB);
+}
+
+void grass(int x, int y){
+    // use dotted fill style for the grass
+    // ganto sample:
+    // setfillstyle(WIDE_DOT_FILL, GREEN); // change this if pangit ung green na kulay
+    // bar(left, top, right, bottom); 
+}
+
+void pathway(int x, int y){
+    // use solid fill style for the pathway
+    // ganto sample:
+    // setfillstyle(SOLID_FILL, COLOR(130, 132, 126));
+    // bar(left, top, right, bottom);
+}
+
+void sky(int x, int y){
+    for (int row = 0; row <= y; row++) {
+        int red = 49 + (row * (255 - 75) / y);
+        int green = 91 + (row * (255 - 143) / y);
+        int blue = 191 + (row * (255 - 216) / y);
+        setcolor(COLOR(red, green, blue));
+        line(0, row, x, row);
+    }
+}
+
 int main(){
     int gm, x, y, gd = DETECT, i;
     // int midx, midy;
@@ -380,6 +503,15 @@ int main(){
 
     int pedHeight = 190;
     int pedWidth = 40;
+
+    // set background to blue
+    sky(x, y);
+
+    // Pathway
+    pathway(x, y);
+
+    // Grass
+    grass(x, y);
     
     // Main Facade
     midBackFacade(x, y, pedHeight, pedWidth);
@@ -389,6 +521,12 @@ int main(){
     terrace(x, y, pedHeight, pedWidth);
     terracePillar(x / 2 - 100, y, NOT_MIRRORED);
     terracePillar(x / 2 + 100, y, MIRRORED);
+
+    // Left Facade
+    leftFacade(x, y);
+
+    // Right Facade
+    rightFacade(x, y);
 
     cement(x, y, pedHeight, pedWidth);
     pedestal(x, y, pedHeight, pedWidth);
