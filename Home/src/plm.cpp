@@ -393,19 +393,132 @@ void midBackFacade(int x, int y, int pedHeight, int pedWidth) {
     }
 }
 
-void slantedTerrace(int x, int y){
-    // left, top, right, bottom
+void slantedTerraceLeft(int x, int y){
+    int leftTerrace = x / 2 - 165; 
+    int rightTerrace = x / 2 - 115; 
+    int startingBottom = y / 2 + 95;
+    int startingTop = startingBottom - 5;
+
+    int slope = 5;
+
+    // ballisters inside the slanted terrace
+    for(int i = 0; i <= 6; i++){
+        ballisters(leftTerrace + 4 + (7 * i), startingTop - 25 - (i * 0.75), NOT_SLANTED);
+    }
+
     int slantedTerracePoints[] = {
-        x / 2 - 100, y - 120, 
-        x / 2 - 100, y - 90, 
-        x / 2 + 100, y - 90, 
-        x / 2 + 100, y - 120
+        leftTerrace, startingBottom + slope,
+        leftTerrace, startingTop + slope,
+        rightTerrace, startingTop,
+        rightTerrace, startingBottom
     };
 
-    setfillstyle(SOLID_FILL, COLOR(212, 211, 209));
-    setcolor(COLOR(151, 150, 146));
+    setfillstyle(SOLID_FILL, COLOR(228, 229, 223));
+    setcolor(COLOR(228, 229, 223));
 
     fillpoly(4, slantedTerracePoints);
+
+    int slantedTerracePointsB[] = {
+        leftTerrace, startingBottom - 35 + slope,
+        leftTerrace, startingTop - 35 + slope + 2,
+        rightTerrace, startingTop - 35 + 2,
+        rightTerrace, startingBottom - 35
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(100, 90, 88));
+    setcolor(COLOR(100, 90, 88));
+
+    fillpoly(4, slantedTerracePointsB);
+
+    int slantedTerracePointsC[] = {
+        leftTerrace, startingBottom + slope + 5 + 15,
+        leftTerrace, startingTop + slope + 5,
+        rightTerrace, startingTop + 5,
+        rightTerrace, startingBottom + 5 + 15
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(213, 214, 209));
+    setcolor(COLOR(213, 214, 209));
+
+    fillpoly(4, slantedTerracePointsC);
+
+    int slantedTerracePointsD[] = {
+        leftTerrace, startingBottom + slope + 5 + 18,
+        leftTerrace, startingTop + slope + 5 + 18,
+        rightTerrace, startingTop + 5 + 19,
+        rightTerrace, startingBottom + 5 + 19
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(84, 74, 34));
+    setcolor(COLOR(84, 74, 34));
+
+    fillpoly(4, slantedTerracePointsD);
+
+    
+}
+
+void slantedTerraceRight(int x, int y){
+    // flipped slantedTerraceLeft
+    int leftTerrace = x - 210;
+    int rightTerrace = x - 155;
+    int startingBottom = y / 2 + 95;
+    int startingTop = startingBottom - 5;
+
+    int slope = 5;
+
+    // ballisters inside the slanted terrace
+    for(int i = 0; i <= 6; i++){
+        // ballisters(leftTerrace + 4 + (7 * i), startingTop - 25 - (i * 0.75), NOT_SLANTED);
+        ballisters(leftTerrace + (7 * i), startingTop - 30 + (i * 0.75), NOT_SLANTED);
+    }
+
+    int slantedTerracePoints[] = {
+        leftTerrace, startingBottom,
+        leftTerrace, startingTop,
+        rightTerrace, startingTop + slope,
+        rightTerrace, startingBottom + slope
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(228, 229, 223));
+    setcolor(COLOR(228, 229, 223));
+
+    fillpoly(4, slantedTerracePoints);
+
+    int slantedTerracePointsB[] = {
+        leftTerrace, startingBottom - 35,
+        leftTerrace, startingTop - 35 + 2,
+        rightTerrace, startingTop - 35 + 2 + slope,
+        rightTerrace, startingBottom - 35 + slope
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(100, 90, 88));
+    setcolor(COLOR(100, 90, 88));
+
+    fillpoly(4, slantedTerracePointsB);
+
+    int slantedTerracePointsC[] = {
+        leftTerrace, startingBottom + 5 + 15,
+        leftTerrace, startingTop + 5,
+        rightTerrace, startingTop + 5 + slope,
+        rightTerrace, startingBottom + 5 + 15 + slope
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(213, 214, 209));
+    setcolor(COLOR(213, 214, 209));
+
+    fillpoly(4, slantedTerracePointsC);
+
+    int slantedTerracePointsD[] = {
+        leftTerrace, startingBottom + 5 + 18,
+        leftTerrace, startingTop + 5 + 18,
+        rightTerrace, startingTop + 5 + 19,
+        rightTerrace, startingBottom + 5 + 19
+    };
+
+    setfillstyle(SOLID_FILL, COLOR(84, 74, 34));
+    setcolor(COLOR(84, 74, 34));
+
+    fillpoly(4, slantedTerracePointsD);
 }
 
 void terrace( int x, int y, int pedHeight, int pedWidth){
@@ -772,8 +885,7 @@ int main(){
     midFrontFacade(x, y, pedHeight, pedWidth);
 
     // Terrace
-    terrace(x, y, pedHeight, pedWidth);
-    slantedTerrace(x, y);
+    terrace(x, y, pedHeight, pedWidth);  
     terracePillar(x / 2 - 100, y, NOT_MIRRORED);
     terracePillar(x / 2 + 100, y, MIRRORED);
 
@@ -782,6 +894,9 @@ int main(){
 
     // Right Facade
     rightFacade(x, y);
+
+    slantedTerraceLeft(x, y);
+    slantedTerraceRight(x, y);
 
     cement(x, y, pedHeight, pedWidth);
     pedestal(x, y, pedHeight, pedWidth);
