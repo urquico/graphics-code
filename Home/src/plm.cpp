@@ -832,17 +832,24 @@ void rightFacade(int x, int y){
 }
 
 void grass(int x, int y){
-    // use dotted fill style for the grass
-    // ganto sample:
-    // setfillstyle(WIDE_DOT_FILL, GREEN); // change this if pangit ung green na kulay
-    // bar(left, top, right, bottom); 
+    // Midpoint of the pathway 
+    int midpoint = (x / 3 - 40 + 2 * x / 3 + 40) / 2;
+    int top = y - 30;
+    int bottom = y;
+
+    // Grass in the middle of the pathways
+    setfillstyle(WIDE_DOT_FILL, GREEN);
+    bar(midpoint - 146, top, midpoint + 146, bottom);
 }
 
 void pathway(int x, int y){
-    // use solid fill style for the pathway
-    // ganto sample:
-    // setfillstyle(SOLID_FILL, COLOR(130, 132, 126));
-    // bar(left, top, right, bottom);
+    setfillstyle(SOLID_FILL, COLOR(130, 132, 126));
+    
+    // Pathway left facade
+    bar(0, y - y / 4, x / 3 - 40, y);
+    
+    // Pathway right facade
+    bar(2 * x / 3 + 40, y - y / 4, x, y);
 }
 
 void sky(int x, int y){
@@ -853,6 +860,26 @@ void sky(int x, int y){
         setcolor(COLOR(red, green, blue));
         line(0, row, x, row);
     }
+}
+
+void banner(int x, int y){
+    // Pamantasan ng Lungsod ng Maynila
+    setcolor(COLOR(175, 50, 72)); 
+    setfillstyle(SOLID_FILL, COLOR(0, 0, 0));
+    setbkcolor(COLOR(212, 211, 209));
+    settextstyle(0, HORIZ_DIR, 1);
+
+    settextstyle(8, HORIZ_DIR, 1);
+    int textWidth = textwidth("PAMANTASAN MANILA");
+    int startX = (x - textWidth) / 2;
+    outtextxy(startX, y / 2 - 180, "PAMANTASAN MANILA");
+
+    settextstyle(0, HORIZ_DIR, 1);
+    int textWidth2 = textwidth("UNIVERSITY MAYNILA");
+    int startX2 = (x - textWidth2) / 2;
+    outtextxy(startX2, y / 2 - 160, "UNIVERSITY MAYNILA");    
+
+    setbkcolor(COLOR(0, 0, 0));   
 }
 
 int main(){
@@ -883,8 +910,9 @@ int main(){
     // Main Facade
     midBackFacade(x, y, pedHeight, pedWidth);
     midFrontFacade(x, y, pedHeight, pedWidth);
+    banner(x, y);
 
-    // Terrace
+    // // Terrace
     terrace(x, y, pedHeight, pedWidth);  
     terracePillar(x / 2 - 100, y, NOT_MIRRORED);
     terracePillar(x / 2 + 100, y, MIRRORED);
@@ -899,7 +927,7 @@ int main(){
     slantedTerraceRight(x, y);
 
     cement(x, y, pedHeight, pedWidth);
-    pedestal(x, y, pedHeight, pedWidth);
+    pedestal(x, y, pedHeight, pedWidth); 
  
     getch();
     // closegraph();
