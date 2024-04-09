@@ -380,6 +380,10 @@ int main()
 
     Killua killua;
     killua.drawKillua();
+
+    setcolor(COLOR(0, 0, 0));
+    settextstyle(3, HORIZ_DIR, 5);
+    outtextxy(10, 10, "Kurt Jacob E. Urquico");
    
     getch();
     closegraph();
